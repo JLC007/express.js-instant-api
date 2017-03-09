@@ -1,6 +1,6 @@
 var init = {};
 
-init.outputFolder = './output';
+init.outputFolder = './output/';
 init.host = 'localhost';
 init.database = 'minicricket';
 init.username = 'postgres';
@@ -9,12 +9,57 @@ init.port = 5432;
 init.schema = 'public';
 init.dbFileName = 'db.js';
 init.routeFileName = 'index.js';
+init.appFileName = 'app.js';
 
+//CREATE APPLICATION FILE
+init.applicationFile = `var express = require('express');
+var index = require('./routes/index');
 
+var app = express();
+
+var main = function() {
+    var http = require('http');
+    var cors = require('cors');
+    
+    app.use(cors());
+    var server = http.createServer(app);
+
+    app.use('/', index);
+    
+    app.use(function (req, res, next) {
+        res.status(404).send('Sorry cant find that!')
+    })
+
+    app.use(function (err, req, res, next) {
+        console.error(err.stack)
+        res.status(500).send('Something broke!')
+    })
+
+    server.listen(4200);
+}
+
+main();
+module.exports = app;
+`;
+
+//CREATE ROUTE FILE
+init.routeIncludes = `var express = require('express');
+var router = express.Router();
+var db = require('../server/` + init.dbFileName.slice(0,-3) + `');`;
+
+init.selectSingleEndpoint = `router.get('/api/{0}/:id', db.{1});`;
+init.selectManyEndpoint = `router.get('/api/{0}', db.{1});`;
+init.createEndpoint = `router.post('/api/{0}', db.{1});`;
+init.updateEndpoint = `router.put('/api/{0}/:id', db.{1});`;
+init.deleteEndpoint = `router.delete('/api/{0}/:id', db.{1});`;
+
+init.endPointExport = 'module.exports = router;';
+//END ROUTING FILE
+
+//CREATE DATABASE FILE
 init.includes = `var express = require('express');
 var app = express();
 var promise = require('bluebird');
-var init = require('../init/init');
 
 var options = {
   // Initialization Options
