@@ -4,7 +4,7 @@ var fs = require('fs');
 var pgStructure = require('pg-structure');
 var init = require('./init/init');
 var object = {}
-var outputString = '';
+
 
 function format(source, params) {
     for (var i=0; i< params.length; i++) {
@@ -16,7 +16,7 @@ function format(source, params) {
 http.createServer(function (req, res) {
     pgStructure({ database: init.database, user: init.username, password: init.password, host: init.host, port: init.port }, [init.schema, 'other_schema'])
         .then((db) => {
-            
+            var outputString = '';
             var functionExportString = '';
             var tables = db.schemas.get(init.schema).tables;  // Map of Table objects.
             let tableName;
@@ -87,7 +87,7 @@ http.createServer(function (req, res) {
             outputString += format(init.exports,[functionExportString.slice(0,-1)]); 
             
             //CREATE DATABASE FILE
-            fs.writeFile(init.dbFileName,outputString, function (err) {
+            fs.writeFile(init.outputFolder + '' + init.dbFileName,outputString, function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -100,6 +100,6 @@ http.createServer(function (req, res) {
         .catch(err => console.log(err.stack));
 
 
-}).listen(8080);
+}).listen(8181);
 
-console.log('Server running on port 8080.');
+console.log('Server running on port 8181.');

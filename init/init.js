@@ -1,8 +1,8 @@
 var init = {};
 
-init.outputFolder = 'c:\\temp\\';
+init.outputFolder = './output';
 init.host = 'localhost';
-init.database = 'buysell';
+init.database = 'minicricket';
 init.username = 'postgres';
 init.password = 'root';
 init.port = 5432;
@@ -79,8 +79,7 @@ init.createStatement = `function create{0}(req, res, next) {
 
 init.updateStatement = `function update{0}(req, res, next) {
   var id = req.params.id;
-  db.none('update public.{0} set {1}} where {2}=id',
-    [{3}, parseInt(req.params.id)])
+  db.none('update public.{0} set {1}} where {2}=$1', [parseInt(req.params.id)])
     .then(function () {
       res.status(200)
         .json({
@@ -95,7 +94,7 @@ init.updateStatement = `function update{0}(req, res, next) {
 
 init.deleteStatement = `function delete{0}(req, res, next) {
   var id = parseInt(req.params.id);
-  db.result('delete from public.{0} where {1} = $1, ,[id])
+  db.result('delete from public.{0} where {1} = $1' ,[id])
     .then(function (result) {
 
       res.status(200)
@@ -109,6 +108,6 @@ init.deleteStatement = `function delete{0}(req, res, next) {
     });
 }`;
 
-init.exports = 'module.exports { {0} }';
+init.exports = 'module.exports = { \r\n {0} \r\n }';
 
 module.exports = init;
