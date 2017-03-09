@@ -32,8 +32,8 @@ Important settings:
 Once these files have been generated you can create a new project and copy these files across.
 In the new project you will require the following npm packages
 
-[Bluebird](https://www.npmjs.com/package/bluebird)
-[Express](https://www.npmjs.com/package/express)
+* [Bluebird](https://www.npmjs.com/package/bluebird)
+* [Express](https://www.npmjs.com/package/express)
 
 Also you just need to create the app.js or index.js file.
 
